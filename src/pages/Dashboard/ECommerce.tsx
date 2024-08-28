@@ -6,7 +6,7 @@ import ChartTwo from '../../components/Charts/ChartTwo';
 import ChatCard from '../../components/Chat/ChatCard';
 import MapOne from '../../components/Maps/MapOne';
 import DefaultLayout from '../../layout/DefaultLayout';
-import TableOne from '../../components/tables/TableOne';
+import TableOne from '../../components/Tables/TableOne';
 
 const ECommerce: React.FC = () => {
   return (

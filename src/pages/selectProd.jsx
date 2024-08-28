@@ -2,7 +2,7 @@ import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../layout/DefaultLayout';
 import { IoSearch } from "react-icons/io5";
 import OneFormField from '../components/oneFieldForm';
-import TableOne from '../components/tables/TableOne';
+import TableOne from '../components/Tables/TableOne';
 
 export default function SelectProd() {
   return (

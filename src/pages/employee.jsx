@@ -8,7 +8,7 @@ export default function Employee(){
     <DefaultLayout>
       <Breadcrumb pageName="Employees" />
       <Buttons name={"Employee"}/>
-      <TableOne name={"employee"} />
+      <TableOne name={"Employee"} />
     </DefaultLayout>
   )
 }

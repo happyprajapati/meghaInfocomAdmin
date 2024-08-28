@@ -1,7 +1,7 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../layout/DefaultLayout';
 import Buttons from '../components/buttons';
-import TableOne from '../components/Tables/TableOne.js';
+import TableOne from '../components/Tables/TableOne';
 
 export default function Product(){
   return (

@@ -16,6 +16,7 @@ const TableOne = ({ name }) => {
 
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
+  const [users, setUsers] = useState([])
 
   const [open, setOpen] = useState(false);    
   const [id, setId] = useState('');    
@@ -49,6 +50,21 @@ const TableOne = ({ name }) => {
           if (res.success) {
             console.log(res.data)
             setProducts(res.data.content)
+            console.log(res.data)
+          }})
+    }else if(name === 'user'){
+      fetch('https://meghainfocom-production.up.railway.app/api/admin/users?page=0&size=10', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.success) {
+            console.log(res.data)
+            setUsers(res.data.content)
             console.log(res.data)
           }})
     }
@@ -167,18 +183,18 @@ const TableOne = ({ name }) => {
                 </th>
               </tr>
 
-              {brandData.map((brand, key) => (
+              {users.map((user, key) => (
                 <tr className="text-center">
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.name}</p>
+                    <p>{user.name}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.contact}</p>
+                    <p>{user.phone}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.email}</p>
+                    <p>{user.city}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
@@ -206,10 +222,10 @@ const TableOne = ({ name }) => {
                 </th>
               </tr>
 
-              {brandData.map((brand, key) => (
+              {users.map((user, key) => (
                 <tr className="text-center">
                   <td className="p-2.5 xl:p-5">
-                    <img src={UserOne} />
+                    <p>{user.name}</p>
                   </td>
                   <td className="p-2.5 xl:p-5">
                     <button>
@@ -325,7 +341,7 @@ const TableOne = ({ name }) => {
                 </th>
 
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
-                  Email
+                  City
                 </th>
 
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
@@ -333,18 +349,18 @@ const TableOne = ({ name }) => {
                 </th>
               </tr>
 
-              {brandData.map((brand, key) => (
+              {users.map((user, key) => (
                 <tr className="text-center">
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.name}</p>
+                    <p>{user.name}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.contact}</p>
+                    <p>{user.phone}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.email}</p>
+                    <p>{user.city}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
@@ -391,35 +407,56 @@ const TableOne = ({ name }) => {
                 </th>
               </tr>
 
-              {brandData.map((brand, key) => (
+              {products.length <= 0 && 
                 <tr className="text-center">
+                  <td className="p-2.5 xl:p-5" colSpan="7">
+                    <p>No product found.</p>
+                  </td>
+                </tr>
+                  }
+              {products.map((prod, key) => (
+                <tr className="text-center" key={key}>
                   <td className="p-2.5 xl:p-5">
                     <input type="checkbox" className="h-4 w-4" checked />
                   </td>
-
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.name}</p>
+                    <p>{prod.title}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.contact}</p>
+                    <p>{prod.modelNo}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.email}</p>
+                    <p>{prod.category.name}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{brand.pass}</p>
+                    <p>{prod.description}</p>
                   </td>
 
-                  <td className="p-2.5 xl:p-5">
-                    <p>{brand.pass}</p>
+                  <td className="p-2.5 xl:p-5 max-w-36">
+                    <Swiper
+                      effect={'cards'}
+                      grabCursor={true}
+                      modules={[EffectCards]}
+                      className="mySwiper"
+                    >
+                      {prod.imageNames.map((img, key) => (
+                      <SwiperSlide key={key}>
+                        <img src={`https://meghainfocom-production.up.railway.app/api/products/image/${img}`} />
+                      </SwiperSlide>
+                      ))}
+                    </Swiper>
                   </td>
-
                   <td className="p-2.5 xl:p-5">
                     <button>
-                      <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" />
+                      <FiEdit className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" onClick={()=> {handleOpen(); setId(prod.id)}}/>
+                    </button>
+                  </td>
+                  <td className="p-2.5 xl:p-5">
+                    <button>
+                      <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" onClick={() => handleDeleteProd(prod.id)} />
                     </button>
                   </td>
                 </tr>

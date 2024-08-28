@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect, useContext } from 'react';
 import { Bounce, toast } from 'react-toastify';
 import slider from './../images/slider1.jpg';

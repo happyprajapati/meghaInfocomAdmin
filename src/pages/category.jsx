@@ -1,7 +1,7 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '../layout/DefaultLayout';
-import TableOne from '../components/tables/TableOne'
 import OneFormField from '../components/oneFieldForm';
+import TableOne from '../components/tables/TableOne';
 
 export default function Category(){
   return (

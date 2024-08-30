@@ -19,7 +19,7 @@ export default function Buttons({name}){
               Add {name}
             </button>
           </div>
-          <FDialog name={"Employee"} id={null} handleOpen={handleOpen} open={open} /></>}
+          <FDialog name={"Employee"} id={''} handleOpen={handleOpen} open={open} /></>}
 
           {name == "Product" && 
             <>
@@ -32,7 +32,7 @@ export default function Buttons({name}){
               Add {name}
             </button>
           </div>
-          <FDialog name={"Product"} id={null} handleOpen={handleOpen} open={open} /></>}
+          <FDialog name={"Product"} id={''} handleOpen={handleOpen} open={open} /></>}
         </>
     )
 }

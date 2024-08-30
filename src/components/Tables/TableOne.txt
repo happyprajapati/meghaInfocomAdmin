@@ -19,7 +19,6 @@ const TableOne = ({ name }) => {
   const [users, setUsers] = useState([])
   const [data, setData] = useState([])
   const [url, setUrl] = useState('')
-  const [active, setActive] = useState(0)
 
   const [open, setOpen] = useState(false);    
   const [id, setId] = useState('');    
@@ -29,99 +28,109 @@ const TableOne = ({ name }) => {
   const handleOpen = () => setOpen(!open);
 
   useEffect(() => {
-    let newUrl = '';
-
-    if(value.search != ''  && name === 'product'){
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/search?search=${value.search}`
-
-    }else if(value.search === '' && name === 'images'){
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/slider/`
-      
+    if(value.search != ''){
+      // setTimeout(() => {
+      //   fetch(`${import.meta.env.VITE_BASE_URL}/api/products/search?search=${value.search}`, {
+      //     method: 'GET',
+      //   })
+      //   .then((res) => res.json())
+      //   .then((res) => {
+      //     if (res.success) {
+      //         console.log(value.search)
+      //         setData(res.data)
+      //         console.log(res.data)
+      //       }})
+      // }, 1000);
     }else if(value.search === '' && name === 'category'){
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/category/`
-      
+      setUrl(`${import.meta.env.VITE_BASE_URL}/api/category/`)
+      // fetch(`${import.meta.env.VITE_BASE_URL}/api/category/`, {
+      //   method: 'GET',
+      // })
+      //   .then((res) => res.json())
+      //   .then((res) => {
+      //     if (res.success) {
+      //       setData(res.data)
+      //       console.log(res.data)
+      //     }})
     }else if(value.search === '' && name === 'product'){
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/`
+      setUrl(`${import.meta.env.VITE_BASE_URL}/api/products/`)
 
+      // fetch(`${import.meta.env.VITE_BASE_URL}/api/products/`, {
+      //   method: 'GET',
+      //   headers: {
+      //   // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+      //     'Authorization': `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQzMzc2NjUsImV4cCI6MTcyNDQyNDA2NSwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.mF-Ie84XD5iD0FhvVmZ-Fo5qGjhY8KXodJwFe_X-z_J_rFMWTGqpKygNWJRt2xIy`,
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //   }
+      // })
+      //   .then((res) => res.json())
+      //   .then((res) => {
+      //     if (res.success) {
+      //       console.log(res.data)
+      //       setData(res.data.content)
+      //       console.log(res.data)
+      //     }})
     }else if(value.search === '' && name === "selectProd"){
     console.log(name)
-    newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/featured`
+    setUrl(`${import.meta.env.VITE_BASE_URL}/api/products/featured`)
 
+      // fetch(`${import.meta.env.VITE_BASE_URL}/api/products/featured`, {
+      //   method: 'GET',
+      //   headers: {
+      //   // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+      //     // 'Authorization': `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQzMzc2NjUsImV4cCI6MTcyNDQyNDA2NSwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.mF-Ie84XD5iD0FhvVmZ-Fo5qGjhY8KXodJwFe_X-z_J_rFMWTGqpKygNWJRt2xIy`,
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //   }
+      // })
+        // .then((res) => res.json())
+        // .then((res) => {
+        //   if (res.success) {
+        //     console.log(res.data)
+        //     setData(res.data)
+        //     console.log(res.data)
+        //   }})
     }else if(value.search === '' && name === 'user'){
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/allusers?page=0&size=10`
+      setUrl(`${import.meta.env.VITE_BASE_URL}/api/admin/users?page=0&size=10`)
+
+      // fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/users?page=0&size=10`, {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*',
+      //   }
+      // })
+      //   .then((res) => res.json())
+      //   .then((res) => {
+      //     if (res.success) {
+      //       console.log(res.data)
+      //       setData(res.data.content)
+      //       console.log(res.data)
+      //     }})
     }
-
-    console.log(name)
-    setUrl(newUrl)
     
-  }, [name, table.table, value.search])
-
-  useEffect(()=>{
     console.log(url)
+    console.log(name)
     fetch(`${url}`, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-          if(name != 'images') setData(res.data.content)
-          else setData(res.data)
+          setData(res.data)
           console.log(res.data)
         }})
-  },[url, table.table])
+  }, [table.table, value.search])
 
   const handleDeleteProd = (id) => {
     console.log(id)
-    fetch(`${import.meta.env.VITE_BASE_URL}/api/products/${id}`, {
+    fetch(`${import.meta.env.BASE_URL}/api/products/${id}`, {
       method: 'DELETE',
       headers: {
       // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
         // 'Authorization': `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQxNTkwMjQsImV4cCI6MTcyNDI0NTQyNCwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.vXihWnXeR0pEC7LgU2B8Yd-Lb6AdR7txyLrWQ8iHsN9l3QxHuVq_TnKtlGwYKBY_`,
         // 'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      }
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.success) {
-          console.log(res.message)
-          table.setTable(!table.table)
-          // console.log(res.data)
-          toast.success(res.message, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          });
-        }else {
-          console.log(res.message)
-          toast.error(res.message, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          });
-        }})
-  }
-
-  const handleDeleteSliderImg = (id) => {
-    console.log(id)
-    fetch(`${import.meta.env.VITE_BASE_URL}/api/slider/${id}`, {
-      method: 'DELETE',
-      headers: {
-      // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-        // 'Authorization': `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQxNTkwMjQsImV4cCI6MTcyNDI0NTQyNCwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.vXihWnXeR0pEC7LgU2B8Yd-Lb6AdR7txyLrWQ8iHsN9l3QxHuVq_TnKtlGwYKBY_`,
-        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       }
     })
@@ -265,13 +274,13 @@ const TableOne = ({ name }) => {
                 </th>
               </tr>
 
-              {data.map((img, key) => (
-                <tr className="text-center" key={key}>
+              {data.map((user, key) => (
+                <tr className="text-center">
                   <td className="p-2.5 xl:p-5">
-                    <img src={`${import.meta.env.VITE_BASE_URL}/api/user/product/image${img.name}`}  />
+                    <p>{user.name}</p>
                   </td>
                   <td className="p-2.5 xl:p-5">
-                    <button onClick={()=> handleDeleteSliderImg(img.id)}>
+                    <button>
                       <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" />
                     </button>
                   </td>
@@ -466,13 +475,13 @@ const TableOne = ({ name }) => {
                 </th>
               </tr>
 
-              {/* {data.length <= 0 && 
+              {data.length <= 0 && 
                 <tr className="text-center">
                   <td className="p-2.5 xl:p-5" colSpan="7">
                     <p>No product found.</p>
                   </td>
                 </tr>
-                  } */}
+                  }
               {data.map((prod, key) => (
                 <tr className="text-center" key={key}>
                   <td className="p-2.5 xl:p-5">
@@ -505,7 +514,6 @@ const TableOne = ({ name }) => {
                       <SwiperSlide key={key}>
                         <img src={`${import.meta.env.VITE_BASE_URL}/api/products/image/${img}`} />
                       </SwiperSlide>
-
                       ))}
                     </Swiper>
                   </td>
@@ -525,64 +533,6 @@ const TableOne = ({ name }) => {
           </div>
         </div>
       )}
-
-{name != 'images' && <div className="flex items-center justify-center gap-4 mt-3">
-  <button disabled
-    className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-    type="button">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-      aria-hidden="true" className="w-4 h-4">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
-    </svg>
-    Previous
-  </button>
-  <div className="flex items-center gap-2">
-    <button
-      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg bg-black text-center align-middle font-sans text-xs font-medium uppercase text-white shadow-md shadow-gray-900/10 transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-      type="button">
-      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        1
-      </span>
-    </button>
-    <button
-      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-      type="button">
-      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        2
-      </span>
-    </button>
-    <button
-      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-      type="button">
-      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        3
-      </span>
-    </button>
-    <button
-      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-      type="button">
-      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        4
-      </span>
-    </button>
-    <button
-      className="relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase text-gray-900 transition-all hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-      type="button">
-      <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        5
-      </span>
-    </button>
-  </div>
-  <button
-    className="flex items-center gap-2 px-6 py-3 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none hover:bg-gray-900/10 active:bg-gray-900/20 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-    type="button">
-    Next
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-      aria-hidden="true" className="w-4 h-4">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-    </svg>
-  </button>
-</div>} 
     </>
   );
 };

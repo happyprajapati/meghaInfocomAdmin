@@ -9,14 +9,14 @@ export default function FDialog({ name, handleOpen, open, id }) {
   const [message, setMsg] = useState('');
   const [images, setImages] = useState([]);
   const [cat, setCat] = useState([]);
-  const [prod, setProd] = useState([]);
+  const [prod, setProd] = useState([{title: '', modelNo: '', description: '', category: {id:'',name:''}}]);
   const [prodEdit, setProdEdit] = useState(false);
   const table = useContext(tableContext)
 
   const [empData, setEmpData] = useState({
     name: '',
-    email: '',
     password: '',
+    contact: ''
   });
   const {
     register,
@@ -77,37 +77,37 @@ export default function FDialog({ name, handleOpen, open, id }) {
 
   useEffect(() => {
     console.log(id)
-    fetch('https://meghainfocom-production.up.railway.app/api/category/', {
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/category/`, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((res) => {
-        setCat(res.data);
+        setCat(res.data.content);
         console.log(table.table)
       });
   }, []);
 
-  // useEffect(() => {
-  //   console.log(id)
-  //   if(id === null){
-  //     setProdEdit(false)
-  //   }else{
-  //     console.log(name)
-  //     console.log("hello form inside")
-  //     setProdEdit(true)
-  //     // fetch(`https://meghainfocom-production.up.railway.app/api/products/id/${id}`, {
-  //     //   method: 'GET',
-  //     //   headers: {
-  //     //     'Access-Control-Allow-Origin': '*',
-  //     //   },
-  //     // })
-  //     //   .then((res) => res.json())
-  //     //   .then((res) => {
-  //     //     // console.log(res)
-  //     //     setProd(res.data);
-  //     //   });
-  //   }
-  // }, [id]);
+  useEffect(() => {
+    console.log(id)
+    if(id === ''){
+      setProdEdit(false)
+    }else{
+      console.log(name)
+      console.log("hello form inside")
+      setProdEdit(true)
+      fetch(`${import.meta.env.VITE_BASE_URL}/api/products/id/${id}`, {
+        method: 'GET',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res.data.category.id)
+          setProd(res.data);
+        });
+    }
+  }, [id]);
 
   // const removeImage = (index) => {
   //   console.log(index);
@@ -115,9 +115,9 @@ export default function FDialog({ name, handleOpen, open, id }) {
   //   console.log(register('images'));
   // };
 
-  const handleEventChange = () => {
-    setEmpData({
-      ...empData,
+  const handleEventChange = (e) => {
+    setProd({
+      ...prod,
       [e.target.name]: e.target.value,
     });
   };
@@ -187,8 +187,8 @@ export default function FDialog({ name, handleOpen, open, id }) {
   });
 
     console.log(formData.description);
-    fetch('https://meghainfocom-production.up.railway.app/api/products/', {
-      method: 'POST',
+    fetch(prodEdit ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}` : `${import.meta.env.VITE_BASE_URL}/api/products/`, {
+      method: prodEdit? 'PUT' : 'POST',
       body: productData,
       headers: {
         // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
@@ -260,19 +260,20 @@ export default function FDialog({ name, handleOpen, open, id }) {
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
-                  <span>Email</span>
+                  <span>Password</span>
                   <input
-                    type="email"
-                    name="email"
+                    type="password"
+                    name="password"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     onChange={handleEventChange}
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
-                  <span>Password</span>
+                  <span>Contact</span>
                   <input
-                    type="password"
-                    name="password"
+                    type="tel"
+                    name="number"
+                    pattern='[0-9]{10}'
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     onChange={handleEventChange}
                   />
@@ -316,7 +317,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     name="title"
                     value={prodEdit && prod.title}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    // onChange={handleEventChange}
+                    onChange={handleEventChange}
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
@@ -334,12 +335,13 @@ export default function FDialog({ name, handleOpen, open, id }) {
                   <span>Category</span>
                   <select
                     {...register('category')}
+                    value={prod.category?.id}
                     name="category"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                   >
                     <option className="py-2">Select Category</option>
                     {cat.map((cat, key) => (
-                      <option value={cat.id} {...cat.id == prod.category ? 'selected' : ''} className="py-2">
+                      <option value={cat.id} key={key} className="py-2">
                         {cat.name}
                       </option>
                     ))}
@@ -413,11 +415,11 @@ export default function FDialog({ name, handleOpen, open, id }) {
                         />
                       </div>
                     ))}
-                  {prod.images &&
-                    prod.images.map((image, index) => (
+                  {prod.imageNames &&
+                    prod.imageNames.map((image, index) => (
                       <div key={index} className="">
                         <div className="flex flex-row justify-between px-2">
-                          <p>{image.name}</p>
+                          <p>{image}</p>
                           <HiMiniXMark
                             className="w-6 h-6 cursor-pointer"
                             onClick={() => {
@@ -426,7 +428,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                           />
                         </div>
                         <img
-                          src={image.url}
+                          src={`${import.meta.env.VITE_BASE_URL}/api/products/image/${image}`}
                           alt="preview"
                           className="h-30 mx-auto object-contain mb-2"
                         />
@@ -439,7 +441,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     disabled={isSubmitting}
                     className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg disabled:bg-[#38bdf8] disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? 'Adding...' : 'Add'}
+                    {prodEdit ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add')}
                   </button>
                 </div>
               </form>

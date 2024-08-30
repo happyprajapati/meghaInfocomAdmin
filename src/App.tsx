@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import { tableContext } from './context/context.jsx'
+import { tableContext, searchContext } from './context/context.jsx'
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
@@ -29,6 +29,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
   const [table, setTable] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -42,6 +43,7 @@ function App() {
     <Loader />
   ) : (
     <>
+    <searchContext.Provider value={{search, setSearch}} >
     <tableContext.Provider value={{table, setTable}} >
       <ToastContainer />
       <Routes>
@@ -182,6 +184,7 @@ function App() {
         />
       </Routes>
     </tableContext.Provider>
+    </searchContext.Provider>
     </>
   );
 }

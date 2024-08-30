@@ -6,6 +6,8 @@ import { tableContext } from '../context/context';
 
 export default function OneFormField({ name }) {
   const [catName, setCatName] = useState('');
+  const [sliderImg, setSliderImg] = useState('');
+  const [title, setTitle] = useState('');
   const [data, setData] = useState([]);
   const [preview, setPreview] = useState('');
   const table = useContext(tableContext)
@@ -60,7 +62,7 @@ export default function OneFormField({ name }) {
   const handleAddCategory = (e) => {
     e.preventDefault();
 
-    fetch('https://meghainfocom-production.up.railway.app/api/category/', {
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/category/`, {
       method: 'POST',
       body: JSON.stringify({ name: catName }),
       headers: {
@@ -121,7 +123,7 @@ export default function OneFormField({ name }) {
 
     // fetch("https://universal-workflow-management-production.up.railway.app/api/manager/room/", {
     //   method: "POST",
-    //   body: JSON.stringify(empData),
+    //   body: JSON.stringify({title: title}),
     //   headers: {
     //     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
     //     "Content-Type": "application/json",
@@ -161,6 +163,54 @@ export default function OneFormField({ name }) {
     // });
   };
 
+  const handleAddSliderImg = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', sliderImg);
+
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/slider/`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        // "type": "formData"
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+    toast.success(res.message, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
+    } else {
+      toast.error(res.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+    });
+    }
+    })
+    .catch((err) => {
+      setMsg(err);
+    });
+  };
+
   return (
     <>
       {name == 'category' && (
@@ -197,7 +247,7 @@ export default function OneFormField({ name }) {
               placeholder="Enter Title"
               className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               onChange={(e) => {
-                setCatName(e.target.value);
+                setTitle(e.target.value);
               }}
             />
             <button
@@ -212,19 +262,22 @@ export default function OneFormField({ name }) {
       )}
 
       {name == 'images' && (
-        <div>
+        <form encType='multipart/form-data' method='post' onSubmit={handleAddSliderImg}>
           <div className="w-full flex items-center justify-center my-3 gap-x-3">
             <input
               type="file"
               className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               onChange={(e) => {
                 setPreview(URL.createObjectURL(e.target.files[0]));
+                setSliderImg(e.target.files[0])
+                console.log(e.target.files[0])
               }}
             />
             <button
               className="w-fit my-1 px-4 py-2 bg-blue-500 text-white rounded-md"
               variant="gradient"
-              onClick={handleAddCategory}
+              type='submit'
+              // onClick={handleAddSliderImg}
             >
               Add
             </button>
@@ -236,7 +289,7 @@ export default function OneFormField({ name }) {
               className="h-40 w-full mx-auto object-contain mb-2"
             />
           )}
-        </div>
+        </form>
       )}
     </>
   );

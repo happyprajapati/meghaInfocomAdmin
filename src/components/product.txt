@@ -71,7 +71,7 @@ export default function FDialog({ name, handleOpen, open }) {
   }, [images]);
 
   useEffect(() => {
-    fetch('https://meghainfocom-production.up.railway.app/api/category/', {
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/category/`, {
       method: 'GET',
     })
       .then((res) => res.json())
@@ -147,7 +147,7 @@ export default function FDialog({ name, handleOpen, open }) {
   const handleProduct = (formData) => {
     formData.images = selectedFiles;
     console.log(formData);
-    fetch('https://meghainfocom-production.up.railway.app/api/products/', {
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/products/`, {
       method: 'POST',
       body: JSON.stringify(formData),
       headers: {

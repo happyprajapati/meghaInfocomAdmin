@@ -1,16 +1,17 @@
 // @ts-nocheck
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { Bounce, toast } from 'react-toastify';
 import slider from './../images/slider1.jpg';
 import { tableContext } from '../context/context';
 
 export default function OneFormField({ name }) {
+  const fileInputRef = useRef(null);
   const [catName, setCatName] = useState('');
   const [sliderImg, setSliderImg] = useState('');
   const [title, setTitle] = useState('');
   const [data, setData] = useState([]);
   const [preview, setPreview] = useState('');
-  const table = useContext(tableContext)
+  const table = useContext(tableContext);
 
   useEffect(() => {
     // fetch(
@@ -67,7 +68,7 @@ export default function OneFormField({ name }) {
       body: JSON.stringify({ name: catName }),
       headers: {
         // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
@@ -75,8 +76,8 @@ export default function OneFormField({ name }) {
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-          setCatName('')
-          table.setTable(!table.table)
+          setCatName('');
+          table.setTable(!table.table);
           toast.success(res.message, {
             position: 'top-right',
             autoClose: 3000,
@@ -133,6 +134,7 @@ export default function OneFormField({ name }) {
     //   .then((res) => res.json())
     //   .then((res) => {
     //     if (res.success) {
+      table.setTable(!table.table)
     toast.success('res.message', {
       position: 'top-right',
       autoClose: 3000,
@@ -169,46 +171,49 @@ export default function OneFormField({ name }) {
     formData.append('image', sliderImg);
 
     fetch(`${import.meta.env.VITE_BASE_URL}/api/slider/`, {
-      method: "POST",
+      method: 'POST',
       body: formData,
       headers: {
         // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         // "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        'Access-Control-Allow-Origin': '*',
         // "type": "formData"
       },
     })
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-    toast.success(res.message, {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-      transition: Bounce,
-    });
-    } else {
-      toast.error(res.message, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-    });
-    }
-    })
-    .catch((err) => {
-      setMsg(err);
-    });
+          table.setTable(!table.table);
+          fileInputRef.current.value = '';
+          setPreview('')
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        } else {
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        }
+      })
+      .catch((err) => {
+        setMsg(err);
+      });
   };
 
   return (
@@ -262,21 +267,27 @@ export default function OneFormField({ name }) {
       )}
 
       {name == 'images' && (
-        <form encType='multipart/form-data' method='post' onSubmit={handleAddSliderImg}>
+        <form
+          encType="multipart/form-data"
+          method="post"
+          onSubmit={handleAddSliderImg}
+        >
           <div className="w-full flex items-center justify-center my-3 gap-x-3">
             <input
               type="file"
+              // value={sliderImg}
+              ref={fileInputRef}
               className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               onChange={(e) => {
                 setPreview(URL.createObjectURL(e.target.files[0]));
-                setSliderImg(e.target.files[0])
-                console.log(e.target.files[0])
+                setSliderImg(e.target.files[0]);
+                console.log(e.target.files[0]);
               }}
             />
             <button
               className="w-fit my-1 px-4 py-2 bg-blue-500 text-white rounded-md"
               variant="gradient"
-              type='submit'
+              type="submit"
               // onClick={handleAddSliderImg}
             >
               Add

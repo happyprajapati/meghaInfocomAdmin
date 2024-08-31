@@ -12,12 +12,13 @@ export default function FDialog({ name, handleOpen, open, id }) {
   const [prod, setProd] = useState([{title: '', modelNo: '', description: '', category: {id:'',name:''}}]);
   const [prodEdit, setProdEdit] = useState(false);
   const table = useContext(tableContext)
-
-  const [empData, setEmpData] = useState({
+  const initialState = {
     name: '',
-    password: '',
-    contact: ''
-  });
+    city: '',
+    phone: '',
+    password: ''
+  };
+  const [empData, setEmpData] = useState(initialState);
   const {
     register,
     handleSubmit,
@@ -115,11 +116,18 @@ export default function FDialog({ name, handleOpen, open, id }) {
   //   console.log(register('images'));
   // };
 
-  const handleEventChange = (e) => {
+  const handleProdChange = (e) => {
     setProd({
       ...prod,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleEmpChange = (e) => {
+    setEmpData(emp => ({
+      ...emp,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleAddEvent = (e) => {
@@ -167,6 +175,66 @@ export default function FDialog({ name, handleOpen, open, id }) {
     //   setMsg(err);
     // });
   };
+
+  const handleAddEmp = (e) => {
+    e.preventDefault();
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/addemp`, {
+      method: 'POST',
+      body: JSON.stringify(empData),
+      headers: {
+        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          table.setTable(!table.table);
+          console.log(table.table)
+          setEmpData(initialState)
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+          handleOpen();
+        } else {
+          console.log(res.message);
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      });
+  }
 
   // const handleRemoveImg = (formData) =>{
   //   console.log("formData")
@@ -228,6 +296,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
             theme: 'light',
             transition: Bounce,
           });
+          handleOpen();
         }
       })
       .catch((err) => {
@@ -256,7 +325,26 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     type="text"
                     name="name"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    onChange={handleEventChange}
+                    onChange={handleEmpChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-y-1 my-2">
+                  <span>City</span>
+                  <input
+                    type="text"
+                    name="city"
+                    className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    onChange={handleEmpChange}
+                  />
+                </div>
+                <div className="flex flex-col gap-y-1 my-2">
+                  <span>Contact</span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    pattern='[0-9]{10}'
+                    className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    onChange={handleEmpChange}
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
@@ -265,24 +353,14 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     type="password"
                     name="password"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    onChange={handleEventChange}
-                  />
-                </div>
-                <div className="flex flex-col gap-y-1 my-2">
-                  <span>Contact</span>
-                  <input
-                    type="tel"
-                    name="number"
-                    pattern='[0-9]{10}'
-                    className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    onChange={handleEventChange}
+                    onChange={handleEmpChange}
                   />
                 </div>
                 <div className="flex justify-center mt-5">
                   <button
                     type="submit"
                     className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg"
-                    onClick={handleAddEvent}
+                    onClick={handleAddEmp}
                   >
                     Add
                   </button>
@@ -317,7 +395,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     name="title"
                     value={prodEdit && prod.title}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    onChange={handleEventChange}
+                    onChange={handleProdChange}
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
@@ -328,7 +406,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     name="modelNo"
                     value={prodEdit && prod.modelNo}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    // onChange={handleEventChange}
+                    onChange={handleProdChange}
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
@@ -356,7 +434,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     value={prodEdit && prod.description}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     name="description"
-                    // onChange={handleEventChange}
+                    onChange={handleProdChange}
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">

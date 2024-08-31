@@ -21,7 +21,7 @@ export default function SelectProd() {
         <OneFormField name={'title'} />
         <div className="w-full flex items-center space-x-2 my-3 mx-auto text-lg">
           <input
-            placeholder="Search item..."
+            placeholder="Search item..."  
             onChange={(e) => value.setSearch(e.target.value)}
             className="block w-full p-2 rounded-md border border-stroke focus:shadow-md outline-none text-md md:text-md lg:text-lg dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
             type="text"

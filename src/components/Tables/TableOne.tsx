@@ -14,11 +14,10 @@ import { tableContext, searchContext } from './../../context/context.jsx'
 
 const TableOne = ({ name }) => {
 
-  const [categories, setCategories] = useState([])
-  const [products, setProducts] = useState([])
-  const [users, setUsers] = useState([])
   const [data, setData] = useState([])
   const [url, setUrl] = useState('')
+  const [editFlage, setEditFlage] = useState(false)
+  const [editedCat, setEditedCat] = useState('')
   const [active, setActive] = useState(0)
 
   const [open, setOpen] = useState(false);    
@@ -31,11 +30,17 @@ const TableOne = ({ name }) => {
   useEffect(() => {
     let newUrl = '';
 
-    if(value.search != ''  && name === 'product'){
+    if(value.search != ''  && name === 'selectProd'){
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/search?search=${value.search}`
+
+    }else if(value.search != ''  && name === 'user'){
+      newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/user/search?search=${value.search}&page=0&size=10`
 
     }else if(value.search === '' && name === 'images'){
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/slider/`
+      
+    }else if(value.search === '' && name === 'employee'){
+      newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/employees?page=0&size=10`
       
     }else if(value.search === '' && name === 'category'){
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/category/`
@@ -44,7 +49,7 @@ const TableOne = ({ name }) => {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/`
 
     }else if(value.search === '' && name === "selectProd"){
-    console.log(name)
+    // console.log(name)
     newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/featured`
 
     }else if(value.search === '' && name === 'user'){
@@ -58,6 +63,21 @@ const TableOne = ({ name }) => {
 
   useEffect(()=>{
     console.log(url)
+    console.log(table.table)
+    if(value.search != ''){
+      setTimeout(() => {
+          fetch(`${url}`, {
+            method: 'GET',
+          })
+          .then((res) => res.json())
+          .then((res) => {
+            if (res.success) {
+                console.log(value.search)
+                setData(res.data.content)
+                console.log(res.data)
+              }})
+        }, 1000);
+    }else{
     fetch(`${url}`, {
       method: 'GET',
     })
@@ -68,7 +88,295 @@ const TableOne = ({ name }) => {
           else setData(res.data)
           console.log(res.data)
         }})
-  },[url, table.table])
+      }
+  }, [url, table.table])
+
+  const handleAddFeaturedProd = (id) => {
+    console.log(id)
+      fetch(`${import.meta.env.VITE_BASE_URL}/api/products/mark-featured/${id}`, {
+        method: 'POST',
+        headers: {
+          // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.success) {
+            // console.log(table.table)
+            table.setTable(!table.table);
+            // console.log(table.table)
+            toast.success(res.message, {
+              position: 'top-right',
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            });
+          } else {
+            console.log(res.message);
+            toast.error(res.message, {
+              position: 'top-right',
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            });
+          }
+        })
+        .catch((err) => {
+          toast.error(err, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        });
+  }
+
+  const handleRemoveFeaturedProd = (id) => {
+    console.log(id)
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/products/remove-featured/${id}`, {
+      method: 'POST',
+      headers: {
+        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          // console.log(table.table)
+          table.setTable(!table.table);
+          // console.log(table.table)
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        } else {
+          console.log(res.message);
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      });
+  }
+
+  const handleUpdateCat = () => {
+    console.log(editedCat)
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/category/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify({'name': editedCat}),
+      headers: {
+        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          // console.log(table.table)
+          table.setTable(!table.table);
+          // console.log(table.table)
+          setEditFlage(false)
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        } else {
+          console.log(res.message);
+          setEditFlage(false)
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      });
+  }
+
+  const handleDeleteCat = (id) =>{
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/category/${id}`, {
+      method: 'DELETE',
+      headers: {
+        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          table.setTable(!table.table);
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        } else {
+          console.log(res.message);
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      });
+  }
+
+  const handleDeleteUser = (id) =>{
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/deleteuser/${id}`, {
+      method: 'DELETE',
+      headers: {
+        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          table.setTable(!table.table);
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        } else {
+          console.log(res.message);
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+        }
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+      });
+  }
 
   const handleDeleteProd = (id) => {
     console.log(id)
@@ -161,48 +469,68 @@ const TableOne = ({ name }) => {
   return (
     <>
       {name == 'category' && (
-        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-          <div className="flex flex-col">
-            <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4">
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
-                  No.
-                </h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
-                  Name
-                </h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">
-                  Delete
-                </h5>
-              </div>
-            </div>
+        <div className="w-full rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="flex flex-col overflow-x-auto">
+          <table>
+            <tr className="text-center rounded-sm bg-gray-2 dark:bg-meta-4">
+              <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
+                No.
+              </th>
+              <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
+                Name
+              </th>
+              <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
+                Edit
+              </th>
+              <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
+                Delete
+              </th>
+            </tr>
 
             {data.map((cat, key) => (
-              <div
-                className={`grid grid-cols-3 border-b border-stroke dark:border-strokedark`}
-                key={key}
-              >
-                <div className="flex items-center justify-center p-2.5 xl:p-5">
+              <tr className="text-center" key={key}>
+                  <td className="p-2.5 xl:p-5">
                   <p>{key + 1}</p>
-                </div>
+                </td>
 
-                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                <td className="p-2.5 xl:p-5">
+                  {editFlage ? 
+                  <input
+                  type="text"
+                  placeholder="Enter Category"
+                  className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                  value={editedCat}
+                  onChange={(e) => {
+                    setEditedCat(e.target.value);
+                  }}
+                /> : 
                   <p>{cat.name}</p>
-                </div>
-
-                <div className="flex items-center justify-center p-2.5 xl:p-5">
+                }
+                </td>
+                <td className="p-2.5 xl:p-5">
+                  {editFlage ? 
+                  <button
+                  className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg"
+                  onClick={handleUpdateCat}
+                  >
+                  Update
+                </button>
+                  :
                   <button>
+                    <FiEdit className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" onClick={()=> {setId(cat.id); setEditFlage(true)}}/>
+                  </button>
+                  }
+                  </td>
+                <td className="p-2.5 xl:p-5">
+                  <button onClick={()=> handleDeleteCat(cat.id)}>
                     <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" />
                   </button>
-                </div>
-              </div>
+                </td>
+              </tr>
             ))}
-          </div>
+          </table>
         </div>
+      </div>
       )}
 
       {name == 'employee' && (
@@ -214,26 +542,20 @@ const TableOne = ({ name }) => {
                   Name
                 </th>
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
+                  City
+                </th>
+                <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
                   Contact
                 </th>
-
-                <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
-                  Email
-                </th>
-
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
                   Delete
                 </th>
               </tr>
 
               {data.map((user, key) => (
-                <tr className="text-center">
+                <tr className="text-center" key={key}>
                   <td className="p-2.5 xl:p-5">
                     <p>{user.name}</p>
-                  </td>
-
-                  <td className="p-2.5 xl:p-5">
-                    <p>{user.phone}</p>
                   </td>
 
                   <td className="p-2.5 xl:p-5">
@@ -241,7 +563,11 @@ const TableOne = ({ name }) => {
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <button>
+                    <p>{user.phone}</p>
+                  </td>
+
+                  <td className="p-2.5 xl:p-5">
+                    <button onClick={()=> handleDeleteUser(user.id)}>
                       <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" />
                     </button>
                   </td>
@@ -268,7 +594,7 @@ const TableOne = ({ name }) => {
               {data.map((img, key) => (
                 <tr className="text-center" key={key}>
                   <td className="p-2.5 xl:p-5">
-                    <img src={`${import.meta.env.VITE_BASE_URL}/api/user/product/image${img.name}`}  />
+                    <img src={`${import.meta.env.VITE_BASE_URL}/api/user/product/image/${img.name}`}  />
                   </td>
                   <td className="p-2.5 xl:p-5">
                     <button onClick={()=> handleDeleteSliderImg(img.id)}>
@@ -375,7 +701,7 @@ const TableOne = ({ name }) => {
         <>
           <div className="w-full flex items-center space-x-2 my-3 mx-auto text-lg">
           <input
-            placeholder="Search item..."
+            placeholder="Search here..."
             onChange={(e) => value.setSearch(e.target.value)}
             className="block w-full p-2 rounded-md border border-stroke focus:shadow-md outline-none text-md md:text-md lg:text-lg dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
             type="text"
@@ -422,7 +748,7 @@ const TableOne = ({ name }) => {
                     </td>
 
                     <td className="p-2.5 xl:p-5">
-                      <button>
+                      <button onClick={()=> handleDeleteUser(user.id)}>
                         <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" />
                       </button>
                     </td>
@@ -476,7 +802,7 @@ const TableOne = ({ name }) => {
               {data.map((prod, key) => (
                 <tr className="text-center" key={key}>
                   <td className="p-2.5 xl:p-5">
-                    <input type="checkbox" className="h-4 w-4" checked />
+                    <input type="checkbox" className="h-4 w-4" onClick={()=> value.search != '' ? handleAddFeaturedProd(prod.id) : handleRemoveFeaturedProd(prod.id)} />
                   </td>
                   <td className="p-2.5 xl:p-5">
                     <p>{prod.title}</p>

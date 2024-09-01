@@ -78,42 +78,6 @@ const TableOne = ({ name }) => {
     }
   }, [name, table.table, value.search, page]);
 
-  const getProductName = async () => {
-    try {
-      const productIds = [...new Set(data.map((item) => item?.id?.productId))];
-      data.map((item) => console.log(item?.id?.productId));
-
-      // Fetch names for all unique product IDs
-      const fetches = productIds.map((id) =>
-        fetch(`${import.meta.env.VITE_BASE_URL}/api/products/id/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        }).then((res) => res.json()),
-      );
-
-      const responses = await Promise.all(fetches);
-
-      // Map responses to product names
-      const newProductNames = responses.reduce((acc, res) => {
-        if (res.success) {
-          acc[res.data.id] = res.data.title;
-        }
-        return acc;
-      }, {});
-
-      setProductNames(newProductNames);
-      console.log(productIds);
-      console.log('productIds');
-      console.log(newProductNames);
-      console.log(productNames);
-    } catch (err) {
-      console.log('An error occurred while fetching product names.');
-    }
-  };
-
   useEffect(() => {
     console.log(url);
     // if (value.search != '') {
@@ -138,22 +102,52 @@ const TableOne = ({ name }) => {
       .then((res) => {
         if (res.success) {
           setData(res.data);
-          console.log(res.data);
-          console.log(value.search);
-          if (name === 'inquiry') {
-            getProductName();
-          }
+          // console.log(res.data);
+          // console.log(value.search);
         }
       });
-    // }
+      // if (name === 'inquiry') {
+        //   getProductName();
+        // }
+        // }
   }, [url, table.table]);
 
-  // useEffect(() => {
+  const getProductName = async () => {
+    try {
+      const productIds = [...new Set(data.map((item) => item?.id?.productId))];
 
-  //       if(name === 'inquiry'){
-  //         getProductName();
-  //       }
-  // }, [name]);
+      // Fetch names for all unique product IDs
+      const fetches = productIds.map((id) =>
+        fetch(`${import.meta.env.VITE_BASE_URL}/api/products/id/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }).then((res) => res.json()),
+      );
+
+      const responses = await Promise.all(fetches);
+
+      // Map responses to product names
+      const newProductNames = responses.reduce((acc, res) => {
+        if (res.success) {
+          acc[res.data.id] = res.data.title;
+        }
+        return acc;
+      }, {});
+
+      setProductNames(newProductNames);
+    } catch (err) {
+      console.log('An error occurred while fetching product names.');
+    }
+  };
+
+  useEffect(() => {
+        if(name === 'inquiry'){
+          getProductName();
+        }
+  }, [data]);
 
   const handleAddFeaturedProd = (id) => {
     console.log(id);

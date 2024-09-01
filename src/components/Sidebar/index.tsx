@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '/logo.png';
 import { FaRegImage } from "react-icons/fa6";
+import { TbMessageQuestion } from "react-icons/tb";
 import { GrCheckboxSelected } from 'react-icons/gr';
 
 interface SidebarProps {
@@ -465,6 +466,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     />
                   </svg>
                   Users
+                </NavLink>
+              </li>
+              {/* Menu Item inquiry */}
+              <li>
+                <NavLink
+                  to="/inquiry"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes('inquiry') && 'bg-graydark dark:bg-meta-4'
+                  }`}
+                >
+                  <TbMessageQuestion className='h-5 w-5' />
+                  Inquiry
                 </NavLink>
               </li>
             </ul>

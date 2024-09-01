@@ -24,6 +24,7 @@ import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Inquiry from './pages/inquiry.jsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -125,6 +126,15 @@ function App() {
             <>
               <PageTitle title="Users" />
               <Users />
+            </>
+          }
+        />
+        <Route
+          path="/inquiry"
+          element={
+            <>
+              <PageTitle title="Inquiry" />
+              <Inquiry />
             </>
           }
         />

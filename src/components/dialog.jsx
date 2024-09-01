@@ -1,22 +1,26 @@
 import { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
+import { City } from 'country-state-city';
 import { Dialog, DialogHeader, DialogBody } from '@material-tailwind/react';
 import { Bounce, toast } from 'react-toastify';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { tableContext } from '../context/context';
 
 export default function FDialog({ name, handleOpen, open, id }) {
+  const [city, setCity] = useState([]);
   const [message, setMsg] = useState('');
   const [images, setImages] = useState([]);
   const [cat, setCat] = useState([]);
-  const [prod, setProd] = useState([{title: '', modelNo: '', description: '', category: {id:'',name:''}}]);
+  const [prod, setProd] = useState([
+    { title: '', modelNo: '', description: '', category: { id: '', name: '' } },
+  ]);
   const [prodEdit, setProdEdit] = useState(false);
-  const table = useContext(tableContext)
+  const table = useContext(tableContext);
   const initialState = {
     name: '',
     city: '',
     phone: '',
-    password: ''
+    password: '',
   };
   const [empData, setEmpData] = useState(initialState);
   const {
@@ -77,25 +81,27 @@ export default function FDialog({ name, handleOpen, open, id }) {
   }, [images]);
 
   useEffect(() => {
-    console.log(id)
+    console.log(id);
     fetch(`${import.meta.env.VITE_BASE_URL}/api/category/`, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((res) => {
         setCat(res.data.content);
-        console.log(table.table)
+        console.log(table.table);
       });
+
+    setCity(City.getCitiesOfState('IN', 'GJ'));
   }, []);
 
   useEffect(() => {
-    console.log(id)
-    if(id === ''){
-      setProdEdit(false)
-    }else{
-      console.log(name)
-      console.log("hello form inside")
-      setProdEdit(true)
+    console.log(id);
+    if (id === '') {
+      setProdEdit(false);
+    } else {
+      console.log(name);
+      console.log('hello form inside');
+      setProdEdit(true);
       fetch(`${import.meta.env.VITE_BASE_URL}/api/products/id/${id}`, {
         method: 'GET',
         headers: {
@@ -104,7 +110,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res.data.category.id)
+          console.log(res.data.category.id);
           setProd(res.data);
         });
     }
@@ -124,7 +130,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
   };
 
   const handleEmpChange = (e) => {
-    setEmpData(emp => ({
+    setEmpData((emp) => ({
       ...emp,
       [e.target.name]: e.target.value,
     }));
@@ -192,8 +198,8 @@ export default function FDialog({ name, handleOpen, open, id }) {
       .then((res) => {
         if (res.success) {
           table.setTable(!table.table);
-          console.log(table.table)
-          setEmpData(initialState)
+          console.log(table.table);
+          setEmpData(initialState);
           toast.success(res.message, {
             position: 'top-right',
             autoClose: 3000,
@@ -234,7 +240,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
           transition: Bounce,
         });
       });
-  }
+  };
 
   // const handleRemoveImg = (formData) =>{
   //   console.log("formData")
@@ -242,7 +248,6 @@ export default function FDialog({ name, handleOpen, open, id }) {
   // }
 
   const handleProduct = (formData) => {
-
     const productData = new FormData();
 
     productData.append('title', formData.title);
@@ -250,27 +255,32 @@ export default function FDialog({ name, handleOpen, open, id }) {
     productData.append('category.id', formData.category);
     productData.append('description', formData.description);
 
-     selectedFiles.forEach((file) => {
-    productData.append('images', file);
-  });
+    selectedFiles.forEach((file) => {
+      productData.append('images', file);
+    });
 
     console.log(formData.description);
-    fetch(prodEdit ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}` : `${import.meta.env.VITE_BASE_URL}/api/products/`, {
-      method: prodEdit? 'PUT' : 'POST',
-      body: productData,
-      headers: {
-        // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-        'Authorization': `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQzMzc2NjUsImV4cCI6MTcyNDQyNDA2NSwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.mF-Ie84XD5iD0FhvVmZ-Fo5qGjhY8KXodJwFe_X-z_J_rFMWTGqpKygNWJRt2xIy`,
-        // 'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        // "type": "formData"
+    fetch(
+      prodEdit
+        ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}`
+        : `${import.meta.env.VITE_BASE_URL}/api/products/`,
+      {
+        method: prodEdit ? 'PUT' : 'POST',
+        body: productData,
+        headers: {
+          // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQzMzc2NjUsImV4cCI6MTcyNDQyNDA2NSwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.mF-Ie84XD5iD0FhvVmZ-Fo5qGjhY8KXodJwFe_X-z_J_rFMWTGqpKygNWJRt2xIy`,
+          // 'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          // "type": "formData"
+        },
       },
-    })
+    )
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
-          reset({...formData})
-          table.setTable(!table.table)
+          reset({ ...formData });
+          table.setTable(!table.table);
           toast.success(res.message, {
             position: 'top-right',
             autoClose: 3000,
@@ -284,7 +294,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
           });
           handleOpen();
         } else {
-          console.log(res.message)
+          console.log(res.message);
           toast.error(res.message, {
             position: 'top-right',
             autoClose: 3000,
@@ -329,20 +339,25 @@ export default function FDialog({ name, handleOpen, open, id }) {
                   />
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
-                  <span>City</span>
-                  <input
-                    type="text"
+                  <span>Name</span>
+                  <select
                     name="city"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                    onChange={handleEmpChange}
-                  />
+                  >
+                    <option className="py-2">Select City</option>
+                    {city.map((city, key) => (
+                      <option value={city.name} key={key} className="py-2">
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
                   <span>Contact</span>
                   <input
                     type="tel"
                     name="phone"
-                    pattern='[0-9]{10}'
+                    pattern="[0-9]{10}"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     onChange={handleEmpChange}
                   />
@@ -384,7 +399,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
             <DialogBody>
               <form
                 className="w-full lg:px-5 md:px-5 dark:text-gray"
-                encType='multipart/form-data'
+                encType="multipart/form-data"
                 onSubmit={handleSubmit(handleProduct)}
               >
                 <div className="flex flex-col gap-y-1">
@@ -506,7 +521,9 @@ export default function FDialog({ name, handleOpen, open, id }) {
                           />
                         </div>
                         <img
-                          src={`${import.meta.env.VITE_BASE_URL}/api/products/image/${image}`}
+                          src={`${
+                            import.meta.env.VITE_BASE_URL
+                          }/api/products/image/${image}`}
                           alt="preview"
                           className="h-30 mx-auto object-contain mb-2"
                         />
@@ -519,7 +536,13 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     disabled={isSubmitting}
                     className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg disabled:bg-[#38bdf8] disabled:cursor-not-allowed"
                   >
-                    {prodEdit ? (isSubmitting ? 'Updating...' : 'Update') : (isSubmitting ? 'Adding...' : 'Add')}
+                    {prodEdit
+                      ? isSubmitting
+                        ? 'Updating...'
+                        : 'Update'
+                      : isSubmitting
+                      ? 'Adding...'
+                      : 'Add'}
                   </button>
                 </div>
               </form>

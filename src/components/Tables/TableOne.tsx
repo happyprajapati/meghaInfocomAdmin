@@ -40,12 +40,12 @@ const TableOne = ({ name }) => {
         // setUrl(newUrl);
         newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/search?search=${
           value.search
-        }`;
+        }?page=${page}&size=10`;
       }, 1000);
     } else if (value.search != '' && name === 'user') {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/user/search?search=${
         value.search
-      }&page=0&size=10`;
+      }?page=${page}&size=10`;
     } else if (value.search === '' && name === 'images') {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/slider/`;
     } else if (value.search === '' && name === 'employee') {
@@ -53,19 +53,19 @@ const TableOne = ({ name }) => {
         import.meta.env.VITE_BASE_URL
       }/api/admin/employees?page=${page}&size=10`;
     } else if (value.search === '' && name === 'category') {
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/category/`;
+      newUrl = `${import.meta.env.VITE_BASE_URL}/api/category/?page=${page}&size=10`;
     } else if (value.search === '' && name === 'product') {
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/`;
+      newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/?page=${page}&size=10`;
     } else if (value.search === '' && name === 'selectProd') {
       // console.log(name)
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/featured`;
+      newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/featured?page=${page}&size=10`;
     } else if (value.search === '' && name === 'user') {
       newUrl = `${
         import.meta.env.VITE_BASE_URL
-      }/api/admin/allusers?page=0&size=10`;
+      }/api/admin/allusers?page=${page}&size=10`;
     } else if (value.search === '' && name === 'inquiry') {
       // getProductName();
-      newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/requests/`;
+      newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/requests/?page=${page}&size=10`;
     }
 
     console.log(name);

@@ -40,6 +40,17 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
+  useEffect(() => {
+    if(localStorage.getItem('authToken') != null){
+      if(localStorage.getItem('role') != 'ROLE_ADMIN'){
+        window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
+      }
+    }else{
+      console.log(localStorage.getItem('authToken'))
+      window.location.href = "https://meghainfocom.up.railway.app/login";
+    }
+  }, []);
+
   return loading ? (
     <Loader />
   ) : (

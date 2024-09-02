@@ -184,68 +184,70 @@ export default function FDialog({ name, handleOpen, open, id }) {
 
   const handleAddEmp = (e) => {
     e.preventDefault();
-    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/addemp`, {
-      method: 'POST',
-      body: JSON.stringify(empData),
-      headers: {
-        // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.success) {
-          table.setTable(!table.table);
-          console.log(table.table);
-          setEmpData(initialState);
-          toast.success(res.message, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          });
-          handleOpen();
-        } else {
-          console.log(res.message);
-          toast.error(res.message, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          });
-        }
-      })
-      .catch((err) => {
-        toast.error(err, {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        });
-      });
+     fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/addemp`, {
+       method: 'POST',
+       body: JSON.stringify(empData),
+       headers: {
+          // Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          // Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQyNDI4MjMsImV4cCI6MTcyNDMyOTIyMywicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.kk1jzV4O61PF5AxMkli48WLuam_bbor5xZbKxz0SHKvFS8bA9MqICMNa4_Y4XhcS`,
+         'Content-Type': 'application/json',
+         'Access-Control-Allow-Origin': '*',
+       },
+     })
+       .then((res) => res.json())
+       .then((res) => {
+         if (res.success) {
+           table.setTable(!table.table);
+           console.log(table.table);
+           setEmpData(initialState);
+           toast.success(res.message, {
+             position: 'top-right',
+             autoClose: 3000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: 'light',
+             transition: Bounce,
+           });
+           handleOpen();
+         } else {
+           console.log(res.message);
+           toast.error(res.message, {
+             position: 'top-right',
+             autoClose: 3000,
+             hideProgressBar: false,
+             closeOnClick: true,
+             pauseOnHover: true,
+             draggable: true,
+             progress: undefined,
+             theme: 'light',
+             transition: Bounce,
+           });
+           handleOpen();
+         }
+       })
+       .catch((err) => {
+         toast.error(err, {
+           position: 'top-right',
+           autoClose: 3000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: 'light',
+           transition: Bounce,
+         });
+         handleOpen();
+       });
   };
 
-  // const handleRemoveImg = (formData) =>{
-  //   console.log("formData")
-  //   console.log(formData)
-  // }
+  //  const handleRemoveImg = (formData) =>{
+  //    console.log("formData")
+  //    console.log(formData)
+  //  }
 
   const handleProduct = (formData) => {
     const productData = new FormData();
@@ -310,7 +312,18 @@ export default function FDialog({ name, handleOpen, open, id }) {
         }
       })
       .catch((err) => {
-        setMsg(err);
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+        handleOpen();
       });
   };
 
@@ -343,10 +356,11 @@ export default function FDialog({ name, handleOpen, open, id }) {
                   <select
                     name="city"
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                    onChange={handleEmpChange}
                   >
                     <option className="py-2">Select City</option>
                     {city.map((city, key) => (
-                      <option value={city.name} key={key} className="py-2">
+                      <option value={city.name} key={key} className="py-2" >
                         {city.name}
                       </option>
                     ))}

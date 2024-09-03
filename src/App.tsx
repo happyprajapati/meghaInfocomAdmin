@@ -25,6 +25,7 @@ import Buttons from './pages/UiElements/Buttons';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Inquiry from './pages/inquiry.jsx';
+import Login from './pages/login.jsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,30 +40,10 @@ function App() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-
-  useEffect(() => {
-    window.addEventListener('message', (event) => {
-      if (event.origin !== 'https://meghainfocom.up.railway.app') {
-        return;
-      }
-      if (event.data.type === 'SET_AUTH_DATA') {
-        localStorage.setItem('authToken', event.data.authToken);
-        localStorage.setItem('role', event.data.role);
-      }
-    });
-  }, []);
   
   useEffect(() => {
-    if(localStorage.getItem('authToken') != null){
-      if(localStorage.getItem('role') != 'ROLE_ADMIN'){
-        window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
-      }
-    }else{
-      console.log(localStorage.getItem('authToken'))
-      window.location.href = "https://meghainfocom.up.railway.app/login";
-    }
+   
   }, []);
-
 
   return loading ? (
     <Loader />
@@ -159,6 +140,14 @@ function App() {
             <>
               <PageTitle title="Inquiry" />
               <Inquiry />
+            </>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <>
+              <Login />
             </>
           }
         />

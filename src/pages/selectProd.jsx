@@ -14,6 +14,16 @@ export default function SelectProd() {
     console.log(value.search);
   }, [value.search]);
 
+  useEffect(() => {
+    if(localStorage.getItem('authToken') != null){
+      if(localStorage.getItem('role') != 'ROLE_ADMIN'){
+        window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
+      }
+    }else{
+      window.location.href = "https://meghainfo-admin.up.railway.app/login";
+    }
+  }, []);
+
   return (
     <>
       <DefaultLayout>

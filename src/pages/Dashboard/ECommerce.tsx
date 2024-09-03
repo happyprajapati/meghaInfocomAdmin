@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
@@ -9,6 +9,17 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import TableOne from '../../components/Tables/TableOne';
 
 const ECommerce: React.FC = () => {
+
+  useEffect(() => {
+    if(localStorage.getItem('authToken') != null){
+      if(localStorage.getItem('role') != 'ROLE_ADMIN'){
+        window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
+      }
+    }else{
+      window.location.href = "https://meghainfo-admin.up.railway.app/login";
+    }
+  }, []);
+
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">

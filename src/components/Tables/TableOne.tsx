@@ -106,9 +106,6 @@ const TableOne = ({ name }) => {
           // console.log(value.search);
         }
       });
-      if(name === 'inquiry') {
-        getProductName();
-      }
         // }
   }, [url, table.table]);
 

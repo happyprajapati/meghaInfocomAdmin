@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { City } from 'country-state-city';
+// import { City } from 'country-state-city';
 import { Dialog, DialogHeader, DialogBody } from '@material-tailwind/react';
 import { Bounce, toast } from 'react-toastify';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { tableContext } from '../context/context';
 
 export default function FDialog({ name, handleOpen, open, id }) {
-  const [city, setCity] = useState([]);
+  // const [city, setCity] = useState([]);
   const [message, setMsg] = useState('');
   const [images, setImages] = useState([]);
   const [cat, setCat] = useState([]);
@@ -90,7 +90,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
         setCat(res.data.content);
       });
 
-    setCity(City.getCitiesOfState('IN', 'GJ'));
+    // setCity(City.getCitiesOfState('IN', 'GJ'));
   }, []);
 
   useEffect(() => {
@@ -444,11 +444,11 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                   >
                     <option className="py-2">Select Category</option>
-                    {cat.map((cat, key) => (
+                    {/* {cat.map((cat, key) => (
                       <option value={cat.id} key={key} className="py-2">
                         {cat.name}
                       </option>
-                    ))}
+                    ))} */}
                   </select>
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">

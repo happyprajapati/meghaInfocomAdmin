@@ -356,11 +356,11 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     onChange={handleEmpChange}
                   >
                     <option className="py-2">Select City</option>
-                    {city.map((city, key) => (
+                    {/* {city.map((city, key) => (
                       <option value={city.name} key={key} className="py-2" >
                         {city.name}
                       </option>
-                    ))}
+                    ))} */}
                   </select>
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">

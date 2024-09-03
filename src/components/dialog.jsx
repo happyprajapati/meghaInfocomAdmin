@@ -269,9 +269,8 @@ export default function FDialog({ name, handleOpen, open, id }) {
         method: prodEdit ? 'PUT' : 'POST',
         body: productData,
         headers: {
-          // 'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          Authorization: `Bearer eyJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE3MjQzMzc2NjUsImV4cCI6MTcyNDQyNDA2NSwicGhvbmUiOiIxMjM0NTY3ODkwIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.mF-Ie84XD5iD0FhvVmZ-Fo5qGjhY8KXodJwFe_X-z_J_rFMWTGqpKygNWJRt2xIy`,
-          // 'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': prodEdit ? 'application/json' : '',
           'Access-Control-Allow-Origin': '*',
           // "type": "formData"
         },

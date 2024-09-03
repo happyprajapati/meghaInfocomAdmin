@@ -27,7 +27,6 @@ export default function Login() {
   } = useForm({ resolver: zodResolver(schema) });
 
   const handleLogin = (formData) => {
-    console.log(formData);
     fetch(`${import.meta.env.VITE_BASE_URL}/auth/signin`, {
       method: 'POST',
       body: JSON.stringify(formData),

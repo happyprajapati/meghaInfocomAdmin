@@ -40,12 +40,12 @@ const TableOne = ({ name }) => {
         // setUrl(newUrl);
         newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/search?search=${
           value.search
-        }?page=${page}&size=10`;
+        }&page=${page}&size=10`;
       }, 1000);
     } else if (value.search != '' && name === 'user') {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/user/search?search=${
         value.search
-      }?page=${page}&size=10`;
+      }&page=${page}&size=10`;
     } else if (value.search === '' && name === 'images') {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/slider/`;
     } else if (value.search === '' && name === 'employee') {
@@ -878,10 +878,6 @@ const TableOne = ({ name }) => {
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
                   images
                 </th>
-
-                <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
-                  Delete
-                </th>
               </tr>
 
               {/* {data.length <= 0 && 
@@ -941,25 +937,6 @@ const TableOne = ({ name }) => {
                         </SwiperSlide>
                       ))}
                     </Swiper>
-                  </td>
-                  <td className="p-2.5 xl:p-5">
-                    <button>
-                      <FiEdit
-                        className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6"
-                        onClick={() => {
-                          handleOpen();
-                          setId(prod.id);
-                        }}
-                      />
-                    </button>
-                  </td>
-                  <td className="p-2.5 xl:p-5">
-                    <button>
-                      <RiDeleteBin6Line
-                        className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6"
-                        onClick={() => handleDeleteProd(prod.id)}
-                      />
-                    </button>
                   </td>
                 </tr>
               ))}

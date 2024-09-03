@@ -35,6 +35,12 @@ const DropdownUser = () => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('role')
+    window.location.href = "https://meghainfo-admin.up.railway.app/login"
+  };
+
   return (
     <div className="relative">
       <Link
@@ -107,7 +113,7 @@ const DropdownUser = () => {
             </Link>
           </li> */}
           <li>
-          <button className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          <button className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base" onClick={handleLogout}>
           <svg
             className="fill-current"
             width="22"

@@ -102,7 +102,7 @@ const TableOne = ({ name }) => {
       .then((res) => {
         if (res.success) {
           setData(res.data);
-          // console.log(res.data);
+          console.log(res.data);
           // console.log(value.search);
         }
       });
@@ -990,7 +990,7 @@ const TableOne = ({ name }) => {
                   </th>
                 </tr>
 
-                {data?.map((inquiry, key) => (
+                {data?.content?.map((inquiry, key) => (
                   <tr className="text-center" key={key}>
                     <td className="p-2.5 xl:p-5">
                       <p>{inquiry.user?.name}</p>

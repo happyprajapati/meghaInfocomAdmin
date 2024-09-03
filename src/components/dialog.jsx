@@ -88,7 +88,6 @@ export default function FDialog({ name, handleOpen, open, id }) {
       .then((res) => res.json())
       .then((res) => {
         setCat(res.data.content);
-        console.log(table.table);
       });
 
     setCity(City.getCitiesOfState('IN', 'GJ'));
@@ -422,7 +421,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     {...register('title')}
                     type="text"
                     name="title"
-                    value={prodEdit && prod.title}
+                    value={prodEdit ? prod.title : ''}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     onChange={handleProdChange}
                   />
@@ -433,7 +432,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     {...register('modelNo')}
                     type="text"
                     name="modelNo"
-                    value={prodEdit && prod.modelNo}
+                    value={prodEdit ? prod.modelNo : ''}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     onChange={handleProdChange}
                   />
@@ -460,7 +459,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     {...register('description')}
                     rows={5}
                     cols={30}
-                    value={prodEdit && prod.description}
+                    value={prodEdit ? prod.description : ''}
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                     name="description"
                     onChange={handleProdChange}

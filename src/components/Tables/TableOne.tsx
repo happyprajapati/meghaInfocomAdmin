@@ -109,6 +109,28 @@ const TableOne = ({ name }) => {
         // }
   }, [url, table.table]);
 
+  const totalPages = data.totalPages;
+
+  const getPageNumbers = () => {
+    let pages = [];
+    if (totalPages <= 5) {
+      for (let i = 0; i < totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (page < 3) {
+        pages = [0, 1, 2, 3, '...', totalPages - 1];
+      } else if (page > totalPages - 4) {
+        pages = [0, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1];
+      } else {
+        pages = [0, '...', page - 1, page, page + 1, '...', totalPages - 1];
+      }
+    }
+    return pages;
+  };
+
+  const pageNumbers = getPageNumbers();
+
   const getProductName = async () => {
     try {
       const productIds = [...new Set(data?.content.map((item) => item?.id?.productId))];
@@ -555,7 +577,7 @@ const TableOne = ({ name }) => {
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    {editFlage ? (
+                    {editFlage && id == cat.id && 
                       <input
                         type="text"
                         placeholder="Enter Category"
@@ -564,10 +586,8 @@ const TableOne = ({ name }) => {
                         onChange={(e) => {
                           setEditedCat(e.target.value);
                         }}
-                      />
-                    ) : (
-                      <p>{cat.name}</p>
-                    )}
+                      />}
+                      {!editFlage && <p>{cat.name}</p>}
                   </td>
                   <td className="p-2.5 xl:p-5">
                     {editFlage ? (
@@ -590,9 +610,18 @@ const TableOne = ({ name }) => {
                     )}
                   </td>
                   <td className="p-2.5 xl:p-5">
+                  {editFlage ? (
+                      <button
+                        className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg"
+                        onClick={()=> setEditFlage(false)}
+                      >
+                        cancle
+                      </button>
+                    ) : (
                     <button onClick={() => handleDeleteCat(cat.id)}>
                       <RiDeleteBin6Line className="h-5 w-5 xl:h-6 xl:w-6 lg:h-6 lg:w-6" />
                     </button>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -1021,21 +1050,20 @@ const TableOne = ({ name }) => {
             Pre
           </button>
           <div className="flex items-center gap-2">
-            {Array.from({ length: data.totalPages }, (_, i) => (
-              <button
-                key={i} // It's important to provide a unique key for each element
-                className={`relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${
-                  page === i
-                    ? 'shadow-md shadow-gray-900/10 bg-black text-white'
-                    : 'text-gray-900'
-                }`}
-                onClick={() => setPage(i)}
-              >
-                <span className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-                  {i + 1} {/* Display the page number */}
-                </span>
-              </button>
-            ))}
+          {pageNumbers.map((num, index) => (
+          <button
+            key={index}
+            className={`relative h-10 max-h-[40px] w-10 max-w-[40px] select-none rounded-lg text-center align-middle font-sans text-xs font-medium uppercase transition-all hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${
+              page === num
+                ? 'shadow-md shadow-gray-900/10 bg-black text-white'
+                : 'text-gray-900'
+            }`}
+            onClick={() => typeof num === 'number' && setPage(num)}
+            disabled={typeof num === 'string'}
+          >
+            {num === '...' ? '...' : num + 1}
+          </button>
+        ))}
           </div>
           <button
             disabled={data.totalPages == page + 1}

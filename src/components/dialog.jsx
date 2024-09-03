@@ -260,7 +260,6 @@ export default function FDialog({ name, handleOpen, open, id }) {
       productData.append('images', file);
     });
 
-    console.log(formData.description);
     fetch(
       prodEdit
         ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}`
@@ -270,7 +269,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
         body: productData,
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          'Content-Type': prodEdit ? 'application/json' : '',
+          // 'Content-Type': prodEdit ? 'application/json' : '',
           'Access-Control-Allow-Origin': '*',
           // "type": "formData"
         },
@@ -544,7 +543,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                 </div>
                 <div className="flex justify-center my-5">
                   {prodEdit ? <button
-                    type="submit"
+                    // type="submit"
                     disabled={isSubmitting}
                     className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg disabled:bg-[#38bdf8] disabled:cursor-not-allowed"
                   >
@@ -554,7 +553,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                   </button>
                   :
                   <button
-                    // type="submit"
+                    type="submit"
                     disabled={isSubmitting}
                     className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg disabled:bg-[#38bdf8] disabled:cursor-not-allowed"
                   >

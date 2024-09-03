@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CardDataStats from '../../components/CardDataStats';
 import ChartOne from '../../components/Charts/ChartOne';
 import ChartThree from '../../components/Charts/ChartThree';
@@ -10,6 +10,8 @@ import TableOne from '../../components/Tables/TableOne';
 
 const ECommerce: React.FC = () => {
 
+  const [data, setData] = useState({})
+
   useEffect(() => {
     if(localStorage.getItem('authToken') != null){
       if(localStorage.getItem('role') != 'ROLE_ADMIN'){
@@ -20,10 +22,20 @@ const ECommerce: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/allcount`, {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setData(res.data);
+      });
+  }, []);
+
   return (
     <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Total Employees" total="56">
+        <CardDataStats title="Total Employees" total={data.empCount}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -46,7 +58,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Categories" total="12">
+        <CardDataStats title="Total Categories" total={data.catCount}>
           <svg
             className="fill-primary dark:fill-white"
             width="20"
@@ -65,7 +77,7 @@ const ECommerce: React.FC = () => {
             </defs>
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Products" total="240">
+        <CardDataStats title="Total Products" total={data.prodCount}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -84,7 +96,7 @@ const ECommerce: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Total Users" total="3456">
+        <CardDataStats title="Total Users" total={data.userCount}>
           <svg
             className="fill-primary dark:fill-white"
             width="22"

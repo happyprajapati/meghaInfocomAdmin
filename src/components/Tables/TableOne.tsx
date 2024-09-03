@@ -106,15 +106,16 @@ const TableOne = ({ name }) => {
           // console.log(value.search);
         }
       });
-      // if (name === 'inquiry') {
-        //   getProductName();
-        // }
+      if(name === 'inquiry') {
+        getProductName();
+      }
         // }
   }, [url, table.table]);
 
   const getProductName = async () => {
     try {
-      const productIds = [...new Set(data.map((item) => item?.id?.productId))];
+      const productIds = [...new Set(data?.content.map((item) => item?.id?.productId))];
+      console.log(productIds)
 
       // Fetch names for all unique product IDs
       const fetches = productIds.map((id) =>

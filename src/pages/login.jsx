@@ -111,9 +111,9 @@ export default function Login() {
                 <span className="absolute right-4 top-3.5">
                   <BsTelephone className="text-gray-500 h-5 w-5" />
                 </span>
-                {errors.contact && (
+                {errors.phone && (
                   <span className="text-[#b91c1c]">
-                    {errors.contact.message}
+                    {errors.phone.message}
                   </span>
                 )}
               </div>
@@ -123,12 +123,12 @@ export default function Login() {
                 <label className="mb-1 ml-1 block font-medium text-black dark:text-white">
                   Password
                 </label>
-                {/* <a
+                <a
                   href="/forgetpass"
                   className="text-sm text-gray-500 underline transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                 >
                   Forgot password?
-                </a> */}
+                </a>
               </div>
 
               <div className="relative">

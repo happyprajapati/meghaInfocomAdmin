@@ -256,68 +256,68 @@ export default function FDialog({ name, handleOpen, open, id }) {
       productData.append('images', file);
     });
 
-    // fetch(
-    //   prodEdit
-    //     ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}?edit=${imgFlag}`
-    //     : `${import.meta.env.VITE_BASE_URL}/api/products/`,
-    //   {
-    //     method: prodEdit ? 'PUT' : 'POST',
-    //     body: productData,
-    //     headers: {
-    //       'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-    //       // 'Content-Type': prodEdit ? 'application/json' : '',
-    //       'Access-Control-Allow-Origin': '*',
-    //       // "type": "formData"
-    //     },
-    //   },
-    // )
-    //   .then((res) => res.json())
-    //   .then((res) => {
-    //     if (res.success) {
-    //       reset({ ...formData });
-    //       table.setTable(!table.table);
-    //       toast.success(res.message, {
-    //         position: 'top-right',
-    //         autoClose: 3000,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: undefined,
-    //         theme: 'light',
-    //         transition: Bounce,
-    //       });
-    //       handleOpen();
-    //     } else {
-    //       console.log(res.message);
-    //       toast.error(res.message, {
-    //         position: 'top-right',
-    //         autoClose: 3000,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: undefined,
-    //         theme: 'light',
-    //         transition: Bounce,
-    //       });
-    //       handleOpen();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error(err, {
-    //       position: 'top-right',
-    //       autoClose: 3000,
-    //       hideProgressBar: false,
-    //       closeOnClick: true,
-    //       pauseOnHover: true,
-    //       draggable: true,
-    //       progress: undefined,
-    //       theme: 'light',
-    //       transition: Bounce,
-    //     });
-    //     handleOpen();
-    //   });
+    fetch(
+      prodEdit
+        ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}?edit=${imgFlag}`
+        : `${import.meta.env.VITE_BASE_URL}/api/products/`,
+      {
+        method: prodEdit ? 'PUT' : 'POST',
+        body: productData,
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          // 'Content-Type': prodEdit ? 'application/json' : '',
+          'Access-Control-Allow-Origin': '*',
+          // "type": "formData"
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          reset({ ...formData });
+          table.setTable(!table.table);
+          toast.success(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+          handleOpen();
+        } else {
+          console.log(res.message);
+          toast.error(res.message, {
+            position: 'top-right',
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          });
+          handleOpen();
+        }
+      })
+      .catch((err) => {
+        toast.error(err, {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        });
+        handleOpen();
+      });
   };
 
   return (

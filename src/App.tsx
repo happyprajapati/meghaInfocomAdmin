@@ -38,15 +38,15 @@ function App() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  useEffect(() => {
-    if(localStorage.getItem('authToken') != null){
-      if(localStorage.getItem('role') != 'ROLE_ADMIN'){
-        window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
-      }
-    }else{
-      window.location.href = "https://meghainfo-admin.up.railway.app/login";
-    }
-  }, []);
+  // useEffect(() => {
+  //   if(localStorage.getItem('authToken') != null){
+  //     if(localStorage.getItem('role') != 'ROLE_ADMIN'){
+  //       window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
+  //     }
+  //   }else{
+  //     window.location.href = "https://meghainfo-admin.up.railway.app/login";
+  //   }
+  // }, []);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);

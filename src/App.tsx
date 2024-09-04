@@ -26,6 +26,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Inquiry from './pages/inquiry.jsx';
 import Login from './pages/login.jsx';
+import ForgetPass from './pages/forgetPass.jsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -38,11 +39,17 @@ function App() {
   }, [pathname]);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    if(localStorage.getItem('authToken') != null){
+      if(localStorage.getItem('role') != 'ROLE_ADMIN'){
+        window.location.href = "https://meghainfocom.up.railway.app/unauthorized";
+      }
+    }else{
+      window.location.href = "https://meghainfo-admin.up.railway.app/login";
+    }
   }, []);
-  
+
   useEffect(() => {
-   
+    setTimeout(() => setLoading(false), 1000);
   }, []);
 
   return loading ? (
@@ -148,6 +155,14 @@ function App() {
           element={
             <>
               <Login />
+            </>
+          }
+        />
+        <Route
+          path="/forgetpass"
+          element={
+            <>
+              <ForgetPass />
             </>
           }
         />

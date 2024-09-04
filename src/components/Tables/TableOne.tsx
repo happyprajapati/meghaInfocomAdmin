@@ -15,6 +15,7 @@ import FDialog from './../dialog.jsx';
 import { Bounce, toast } from 'react-toastify';
 import { tableContext, searchContext } from './../../context/context.jsx';
 import Inquiry from '../../pages/inquiry.jsx';
+import { IoClose } from "react-icons/io5";
 
 const TableOne = ({ name }) => {
   const [data, setData] = useState([]);
@@ -22,7 +23,6 @@ const TableOne = ({ name }) => {
   const [editFlage, setEditFlage] = useState(false);
   const [productNames, setProductNames] = useState({});
   const [editedCat, setEditedCat] = useState('');
-  const [active, setActive] = useState(0);
   const [page, setPage] = useState(0);
 
   const [open, setOpen] = useState(false);
@@ -36,12 +36,9 @@ const TableOne = ({ name }) => {
     let newUrl = '';
 
     if (value.search != '' && name === 'selectProd') {
-      setTimeout(() => {
-        // setUrl(newUrl);
         newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/search?search=${
           value.search
         }&page=${page}&size=10`;
-      }, 1000);
     } else if (value.search != '' && name === 'user') {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/user/search?search=${
         value.search
@@ -57,25 +54,17 @@ const TableOne = ({ name }) => {
     } else if (value.search === '' && name === 'product') {
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/?page=${page}&size=10`;
     } else if (value.search === '' && name === 'selectProd') {
-      // console.log(name)
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/products/featured?page=${page}&size=10`;
     } else if (value.search === '' && name === 'user') {
       newUrl = `${
         import.meta.env.VITE_BASE_URL
       }/api/admin/allusers?page=${page}&size=10`;
     } else if (value.search === '' && name === 'inquiry') {
-      // getProductName();
       newUrl = `${import.meta.env.VITE_BASE_URL}/api/admin/requests/?page=${page}&size=10`;
     }
 
     console.log(name);
-    if (value.search != '') {
-      setTimeout(() => {
-        setUrl(newUrl);
-      }, 1000);
-    } else {
       setUrl(newUrl);
-    }
   }, [name, table.table, value.search, page]);
 
   useEffect(() => {
@@ -103,7 +92,7 @@ const TableOne = ({ name }) => {
         if (res.success) {
           setData(res.data);
           console.log(res.data);
-          // console.log(value.search);
+          console.log(value.search);
         }
       });
         // }
@@ -718,7 +707,7 @@ const TableOne = ({ name }) => {
                   Name
                 </th>
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
-                  Serial No.
+                  Model No.
                 </th>
 
                 <th className="p-2.5 xl:p-5 text-sm font-medium uppercase xsm:text-base">
@@ -763,7 +752,8 @@ const TableOne = ({ name }) => {
                   </td>
 
                   <td className="p-2.5 xl:p-5">
-                    <p>{prod.description}</p>
+                    <p className=' max-w-42 max-h-24 overflow-y-auto'>{prod.description}
+                    </p>
                   </td>
 
                   <td className="p-2.5 xl:p-5 max-w-36">
@@ -819,18 +809,14 @@ const TableOne = ({ name }) => {
       {name == 'user' && (
         <>
           <div className="w-full flex items-center space-x-2 my-3 mx-auto text-lg">
+            <IoClose onClick={()=> value.setSearch('')} className='absolute right-7 md:right-10 lg:right-12 xl:right-14 w-5 h-5 cursor-pointer'/>
             <input
               placeholder="Search here..."
+              value={value.search} 
               onChange={(e) => value.setSearch(e.target.value)}
               className="block w-full p-2 rounded-md border border-stroke focus:shadow-md outline-none text-md md:text-md lg:text-lg dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
               type="text"
             />
-            {/* <button
-                type="submit"
-                className="w-fit mx-2 px-4 py-2.5 bg-blue-500 text-white rounded-md"
-              >
-                <IoSearch />
-            </button> */}
           </div>
           <div className="w-full rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
             <div className="flex flex-col overflow-x-auto">

@@ -9,6 +9,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
   const [city, setCity] = useState([]);
   const [message, setMsg] = useState('');
   const [images, setImages] = useState([]);
+  const [imgFlag, setImgFlag] = useState(false);
   const [cat, setCat] = useState([]);
   const [prod, setProd] = useState([
     { title: '', modelNo: '', description: '', category: { id: '', name: '' } },
@@ -26,26 +27,9 @@ export default function FDialog({ name, handleOpen, open, id }) {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm();
 
-  // const onFileSelect = (e) => {
-  //   const files = e.target.files;
-  //   if (files.length == 0) return;
-  //   for (let i = 0; i < files.length; i++) {
-  //     if (!images.some((e) => e.name == files[i].name)) {
-  //       setImages((pre) => [
-  //         ...pre,
-  //         {
-  //           name: files[i].name,
-  //           url: URL.createObjectURL(files[i]),
-  //         },
-  //       ]);
-  //     }
-  //   }
-  // };
-
-  // const { register, handleSubmit } = useForm();
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const onFileSelect = (e) => {
@@ -53,6 +37,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
     if (files.length == 0) return;
     for (let i = 0; i < files.length; i++) {
       if (!images.some((e) => e.name == files[i].name)) {
+        setImgFlag(true)
         setImages((pre) => [
           ...pre,
           {
@@ -66,11 +51,14 @@ export default function FDialog({ name, handleOpen, open, id }) {
   };
 
   const handleRemoveImg = (index) => {
-    // console.log("fileToRemove: ",fileToRemove)
-    setSelectedFiles((prevFiles) => prevFiles.filter((_, i) => i != index));
+    setSelectedFiles((prevFiles) => {
+    const updatedFiles = prevFiles.filter((_, i) => i !== index);
+      if (updatedFiles.length === 0) {
+        setImgFlag(false);
+      }
+      return updatedFiles;
+    });
     setImages((pre) => pre.filter((_, i) => i != index));
-    // console.log(selectedFiles)
-    // console.log(images)
   };
 
   useEffect(() => {
@@ -256,6 +244,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
   //  }
 
   const handleProduct = (formData) => {
+    console.log(isSubmitting)
     const productData = new FormData();
 
     productData.append('title', formData.title);
@@ -267,68 +256,68 @@ export default function FDialog({ name, handleOpen, open, id }) {
       productData.append('images', file);
     });
 
-    fetch(
-      prodEdit
-        ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}`
-        : `${import.meta.env.VITE_BASE_URL}/api/products/`,
-      {
-        method: prodEdit ? 'PUT' : 'POST',
-        body: productData,
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-          // 'Content-Type': prodEdit ? 'application/json' : '',
-          'Access-Control-Allow-Origin': '*',
-          // "type": "formData"
-        },
-      },
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.success) {
-          reset({ ...formData });
-          table.setTable(!table.table);
-          toast.success(res.message, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          });
-          handleOpen();
-        } else {
-          console.log(res.message);
-          toast.error(res.message, {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          });
-          handleOpen();
-        }
-      })
-      .catch((err) => {
-        toast.error(err, {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        });
-        handleOpen();
-      });
+    // fetch(
+    //   prodEdit
+    //     ? `${import.meta.env.VITE_BASE_URL}/api/products/${prod.id}?edit=${imgFlag}`
+    //     : `${import.meta.env.VITE_BASE_URL}/api/products/`,
+    //   {
+    //     method: prodEdit ? 'PUT' : 'POST',
+    //     body: productData,
+    //     headers: {
+    //       'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+    //       // 'Content-Type': prodEdit ? 'application/json' : '',
+    //       'Access-Control-Allow-Origin': '*',
+    //       // "type": "formData"
+    //     },
+    //   },
+    // )
+    //   .then((res) => res.json())
+    //   .then((res) => {
+    //     if (res.success) {
+    //       reset({ ...formData });
+    //       table.setTable(!table.table);
+    //       toast.success(res.message, {
+    //         position: 'top-right',
+    //         autoClose: 3000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: true,
+    //         draggable: true,
+    //         progress: undefined,
+    //         theme: 'light',
+    //         transition: Bounce,
+    //       });
+    //       handleOpen();
+    //     } else {
+    //       console.log(res.message);
+    //       toast.error(res.message, {
+    //         position: 'top-right',
+    //         autoClose: 3000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: true,
+    //         draggable: true,
+    //         progress: undefined,
+    //         theme: 'light',
+    //         transition: Bounce,
+    //       });
+    //       handleOpen();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     toast.error(err, {
+    //       position: 'top-right',
+    //       autoClose: 3000,
+    //       hideProgressBar: false,
+    //       closeOnClick: true,
+    //       pauseOnHover: true,
+    //       draggable: true,
+    //       progress: undefined,
+    //       theme: 'light',
+    //       transition: Bounce,
+    //     });
+    //     handleOpen();
+    //   });
   };
 
   return (
@@ -451,11 +440,11 @@ export default function FDialog({ name, handleOpen, open, id }) {
                     className="rounded-lg border border-stroke bg-white p-3 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                   >
                     <option className="py-2">Select Category</option>
-                    {/* {cat.map((cat, key) => (
+                    {cat.map((cat, key) => (
                       <option value={cat.id} key={key} className="py-2">
                         {cat.name}
                       </option>
-                    ))} */}
+                    ))}
                   </select>
                 </div>
                 <div className="flex flex-col gap-y-1 my-2">
@@ -526,7 +515,7 @@ export default function FDialog({ name, handleOpen, open, id }) {
                         />
                       </div>
                     ))}
-                  {prod.imageNames &&
+                  {/* {prod.imageNames &&
                     prod.imageNames.map((image, index) => (
                       <div key={index} className="">
                         <div className="flex flex-row justify-between px-2">
@@ -546,28 +535,23 @@ export default function FDialog({ name, handleOpen, open, id }) {
                           className="h-30 mx-auto object-contain mb-2"
                         />
                       </div>
-                    ))}
+                    ))} */}
                 </div>
                 <div className="flex justify-center my-5">
-                  {prodEdit ? <button
-                    // type="submit"
-                    disabled={isSubmitting}
-                    className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg disabled:bg-[#38bdf8] disabled:cursor-not-allowed"
-                  >
-                  {isSubmitting
-                        ? 'Updating...'
-                        : 'Update'}
-                  </button>
-                  :
-                  <button
+                <button
                     type="submit"
                     disabled={isSubmitting}
                     className="bg-blue-500 px-8 text-white px-3 py-2 rounded-lg disabled:bg-[#38bdf8] disabled:cursor-not-allowed"
                   >
-                    {isSubmitting
+                    {prodEdit ? 
+                  (isSubmitting
+                        ? 'Updating...'
+                        : 'Update')
+                  :
+                    (isSubmitting
                       ? 'Adding...'
-                      : 'Add'}
-                  </button>}
+                      : 'Add')}
+                  </button>
                 </div>
               </form>
             </DialogBody>
